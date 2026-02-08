@@ -6,10 +6,10 @@ const Stats = () => {
     const statsRef = useRef(null)
 
     const stats = [
-        { id: 1, value: 50000, suffix: '+', label: 'Subscribers' },
-        { id: 2, value: 100, suffix: '+', label: 'Episodes' },
-        { id: 3, value: 1000000, suffix: '+', label: 'Views' },
-        { id: 4, value: 25, suffix: '+', label: 'Guests' }
+        { id: 1, value: 2660, suffix: '+', label: 'Subscribers' },
+        { id: 2, value: 106, suffix: '+', label: 'Videos' },
+        { id: 3, value: 150000, suffix: '+', label: 'Views' },
+        { id: 4, value: 30, suffix: '+', label: 'Guests' }
     ]
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const Stats = () => {
             if (num >= 1000000) {
                 return (num / 1000000).toFixed(1) + 'M'
             } else if (num >= 1000) {
-                return (num / 1000).toFixed(0) + 'K'
+                return (num / 1000).toFixed(2) + 'K'
             }
             return num.toString()
         }

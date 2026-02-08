@@ -18,6 +18,7 @@ const Footer = () => {
                         <h4 className="footer-heading">Quick Links</h4>
                         <ul className="footer-list">
                             <li><a href="#videos">Videos</a></li>
+                            <li><a href="https://youtube.com/@kulturalkompass/community?si=G9DK9A2T_QD9hflU" target="_blank" rel="noopener noreferrer">Community</a></li>
                             <li><a href="#advertise">Advertise</a></li>
                             <li><a href="#contact">Contact</a></li>
                         </ul>
@@ -36,7 +37,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-bottom text-center">
-                    <p>&copy; {new Date().getFullYear()} Kultural Kompass. All rights reserved.</p>
+                    <p>&copy; 2024 Kultural Kompass. All rights reserved.</p>
                 </div>
             </div>
         </footer>

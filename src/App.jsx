@@ -5,6 +5,7 @@ import Hero from './components/Hero'
 import About from './components/About'
 import Stats from './components/Stats'
 import PodcastSegments from './components/PodcastSegments'
+import Partners from './components/Partners'
 import FeaturedVideos from './components/FeaturedVideos'
 import Interviews from './components/Interviews'
 import Advertise from './components/Advertise'
@@ -12,10 +13,13 @@ import Contact from './components/Contact'
 import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import Blog from './components/Blog'
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [currentView, setCurrentView] = useState('home') // 'home' or 'blog'
+  const [selectedPost, setSelectedPost] = useState(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +58,13 @@ function App() {
     return () => {
       animatedElements.forEach(el => observer.unobserve(el))
     }
-  }, [])
+  }, [currentView, selectedPost]) // Re-run when view or post changes
+
+  const handleNavigate = (view) => {
+    setCurrentView(view)
+    setSelectedPost(null) // Reset selection when navigating
+    window.scrollTo(0, 0)
+  }
 
   return (
     <div className="app">
@@ -64,16 +74,25 @@ function App() {
         style={{ width: `${scrollProgress}%` }}
       />
 
-      <Navbar scrolled={scrolled} />
-      <Hero />
-      <About />
-      <Stats />
-      <PodcastSegments />
-      <FeaturedVideos />
-      <Interviews />
-      <Advertise />
-      <Contact />
-      <Newsletter />
+      <Navbar scrolled={scrolled} setView={handleNavigate} currentView={currentView} />
+
+      {currentView === 'home' ? (
+        <>
+          <Hero />
+          <About />
+          <Stats />
+          <Partners />
+          <PodcastSegments />
+          <FeaturedVideos />
+          <Interviews />
+          <Advertise />
+          <Contact />
+          <Newsletter />
+        </>
+      ) : (
+        <Blog selectedPost={selectedPost} setSelectedPost={setSelectedPost} />
+      )}
+
       <Footer />
 
       {/* Scroll to Top Button */}

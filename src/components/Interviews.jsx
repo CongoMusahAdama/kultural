@@ -39,41 +39,49 @@ const Interviews = () => {
         }
     ]
 
+    // Create a duplicated list for seamless looping
+    const displayGuests = [...guests, ...guests]
+
     return (
         <section id="interviews" className="interviews section bg-black">
-            <div className="container">
+            <div className="container-fluid px-0">
                 <div className="section-header text-center mb-xl">
                     <span className="section-label">Conversations</span>
-                    <h2 className="section-title text-white">
-                        Featured Guests
-                    </h2>
+                    <h2 className="section-title text-white">Featured Guests</h2>
                 </div>
 
-                <div className="guests-grid">
-                    {guests.map((guest) => (
-                        <div key={guest.id} className="guest-card">
-                            <div className="guest-image-wrapper">
-                                <img src={guest.image} alt={guest.name} className="guest-img" />
-                                <div className="guest-overlay">
-                                    <span className="guest-topic">{guest.topic}</span>
+                {/* Infinite Scrolling Ticker */}
+                <div className="guests-ticker">
+                    <div className="ticker-track">
+                        {displayGuests.map((guest, idx) => (
+                            <div key={`${guest.id}-${idx}`} className="guest-card-ticker">
+                                <div className="guest-image-wrapper">
+                                    <img src={guest.image} alt={guest.name} className="guest-img" />
+                                    <div className="guest-overlay">
+                                        <span className="guest-topic">{guest.topic}</span>
+                                    </div>
+                                </div>
+                                <div className="guest-info">
+                                    <h3 className="guest-name">{guest.name}</h3>
+                                    <p className="guest-role">{guest.role}</p>
                                 </div>
                             </div>
-                            <div className="guest-info">
-                                <h3 className="guest-name">{guest.name}</h3>
-                                <p className="guest-role">{guest.role}</p>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                </div>
 
-                    {/* CTA Card */}
-                    <div className="guest-card guest-cta-card">
-                        <div className="guest-cta-content">
-                            <h3 className="guest-cta-title">Want to be a guest?</h3>
+                {/* Static CTA Card Section */}
+                <div className="container mt-2xl">
+                    <div className="guest-cta-wrapper">
+                        <div className="guest-cta-card-static">
+                            <div className="cta-brand-tag">Join the Conversation</div>
+                            <h3 className="guest-cta-title">Want to share your story?</h3>
                             <p className="guest-cta-text">
-                                We are always looking for unique voices and perspectives.
+                                Kultural Kompass is always looking for unique voices, cultural pioneers,
+                                and people with stories that need to be told.
                             </p>
-                            <a href="#contact" className="btn btn-outline">
-                                Apply Now
+                            <a href="#contact" className="btn btn-primary btn-rounded">
+                                Apply to be a Guest
                             </a>
                         </div>
                     </div>

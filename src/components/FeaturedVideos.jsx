@@ -1,7 +1,14 @@
+import { useState, useEffect } from 'react'
 import './FeaturedVideos.css'
 
+// Configuration - Replace with your own or use environment variables
+// You can get these from the Google Cloud Console (API Key) and YouTube (Channel ID)
+const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || ''
+const CHANNEL_ID = import.meta.env.VITE_YOUTUBE_CHANNEL_ID || 'UC6E9bY9R9C6QeB-eL-E-eEg' // Example ID, replace with real one
+
 const FeaturedVideos = () => {
-    const videos = [
+    // Fallback/Initial videos
+    const initialVideos = [
         {
             id: 'Dm-Gv5Hgh0c',
             title: 'I Walked 223KM from Takoradi to Accra within 4 Days',
@@ -34,6 +41,52 @@ const FeaturedVideos = () => {
         }
     ]
 
+    const [videos, setVideos] = useState(initialVideos)
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        const fetchVideos = async () => {
+            if (!YOUTUBE_API_KEY || !CHANNEL_ID) return
+
+            setLoading(true)
+            try {
+                // First, get the 'uploads' playlist ID for the channel
+                const channelResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${YOUTUBE_API_KEY}`
+                )
+                const channelData = await channelResponse.json()
+
+                if (channelData.items && channelData.items.length > 0) {
+                    const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads
+
+                    // Then, fetch the videos from that playlist
+                    const playlistResponse = await fetch(
+                        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=6&playlistId=${uploadsPlaylistId}&key=${YOUTUBE_API_KEY}`
+                    )
+                    const playlistData = await playlistResponse.json()
+
+                    if (playlistData.items) {
+                        const fetchedVideos = playlistData.items.map(item => ({
+                            id: item.snippet.resourceId.videoId,
+                            title: item.snippet.title,
+                            description: item.snippet.description.length > 150
+                                ? item.snippet.description.substring(0, 150) + '...'
+                                : item.snippet.description
+                        }))
+                        setVideos(fetchedVideos)
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching YouTube videos:', error)
+                // Stay with initialVideos on error
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchVideos()
+    }, [])
+
     return (
         <section id="videos" className="videos section bg-black">
             <div className="container">
@@ -44,22 +97,28 @@ const FeaturedVideos = () => {
                     </h2>
                 </div>
 
-                <div className="videos-grid">
-                    {videos.map((video) => (
-                        <div key={video.id} className="video-card">
-                            <div className="video-wrapper">
-                                <iframe
-                                    src={`https://www.youtube.com/embed/${video.id}`}
-                                    title={video.title}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
+                {loading ? (
+                    <div className="loading-spinner text-center">
+                        <p>Loading latest videos...</p>
+                    </div>
+                ) : (
+                    <div className="videos-grid">
+                        {videos.map((video) => (
+                            <div key={video.id} className="video-card animate-fade-in">
+                                <div className="video-wrapper">
+                                    <iframe
+                                        src={`https://www.youtube.com/embed/${video.id}`}
+                                        title={video.title}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                                <h3 className="video-title mt-sm">{video.title}</h3>
+                                <p className="video-description">{video.description}</p>
                             </div>
-                            <h3 className="video-title mt-sm">{video.title}</h3>
-                            <p className="video-description">{video.description}</p>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
 
                 <div className="videos-cta text-center mt-xl">
                     <a

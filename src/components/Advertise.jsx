@@ -2,15 +2,15 @@ import './Advertise.css'
 
 const Advertise = () => {
     return (
-        <section id="advertise" className="advertise section bg-dark">
+        <section id="advertise" className="advertise section">
             <div className="container">
                 <div className="advertise-wrapper">
                     <div className="advertise-content text-center">
                         <span className="section-label">Partner With Us</span>
-                        <h2 className="section-title text-white mb-md">
-                            Advertise With <span className="text-orange">Kultural Kompass</span>
+                        <h2 className="section-title mb-md">
+                            Advertise With <span className="text-white">Kultural Kompass</span>
                         </h2>
-                        <p className="advertise-intro text-gray mb-lg">
+                        <p className="advertise-intro mb-lg">
                             Connect your brand with a highly engaged audience passionate about culture, lifestyle, and truth.
                             Our platform offers unique opportunities for brands looking to make a meaningful impact.
                         </p>
@@ -30,7 +30,7 @@ const Advertise = () => {
                             </div>
                         </div>
 
-                        <a href="#contact" className="btn btn-primary">
+                        <a href="#contact" className="btn btn-dark-advertise">
                             Advertise With Kultural Kompass
                         </a>
                     </div>

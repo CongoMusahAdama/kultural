@@ -1,9 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './Hero.css'
 
 const Hero = () => {
+    const [showContent, setShowContent] = useState(true)
     const playerRef = useRef(null)
     const intervalRef = useRef(null)
+    const isRestartingRef = useRef(false)
 
     useEffect(() => {
         // Load YouTube IFrame API
@@ -32,21 +34,40 @@ const Hero = () => {
                     onReady: (event) => {
                         event.target.seekTo(13, true)
                         event.target.playVideo()
+                        setShowContent(false)
 
                         // Monitor playback to keep it within 13-30 seconds
                         intervalRef.current = setInterval(() => {
+                            if (isRestartingRef.current) return
+
                             const currentTime = event.target.getCurrentTime()
-                            if (currentTime < 13 || currentTime >= 30) {
+
+                            // If video reaches 30s, trigger the pause/text reveal
+                            if (currentTime >= 30) {
+                                isRestartingRef.current = true
+                                event.target.pauseVideo()
+                                setShowContent(true)
+
+                                // Wait for 5 seconds showing text, then restart video
+                                setTimeout(() => {
+                                    setShowContent(false)
+                                    event.target.seekTo(13, true)
+                                    event.target.playVideo()
+                                    isRestartingRef.current = false
+                                }, 5000)
+                            } else if (currentTime < 13) {
+                                // Forced correction if it somehow jumps back
                                 event.target.seekTo(13, true)
                             }
-                        }, 100) // Check every 100ms
+                        }, 100)
                     },
                     onStateChange: (event) => {
-                        // If video ends or pauses, restart from 13 seconds
-                        if (event.data === window.YT.PlayerState.ENDED ||
-                            event.data === window.YT.PlayerState.PAUSED) {
-                            event.target.seekTo(13, true)
-                            event.target.playVideo()
+                        // Ensure video keeps playing if it ends out of cycle
+                        if (event.data === window.YT.PlayerState.ENDED) {
+                            if (!isRestartingRef.current) {
+                                event.target.seekTo(13, true)
+                                event.target.playVideo()
+                            }
                         }
                     }
                 }
@@ -72,18 +93,18 @@ const Hero = () => {
             </div>
 
             {/* Main Content */}
-            <div className="container hero-container">
+            <div className={`container hero-container ${showContent ? 'visible' : 'hidden'}`}>
                 <div className="hero-content-grid">
                     {/* Left Column - Text Content */}
                     <div className="hero-text-column">
-                        <h1 className="hero-title animate-fade-in" style={{ animationDelay: '0.1s' }}>
+                        <h1 className="hero-title">
                             Kultural <span className="text-orange">Kompass</span>
                         </h1>
-                        <p className="hero-tagline animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                        <p className="hero-tagline">
                             Exploring culture, truth, and the tensions that shape our world.
                         </p>
 
-                        <div className="hero-cta animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                        <div className="hero-cta">
                             <a
                                 href="https://www.youtube.com/@KulturalKompass"
                                 target="_blank"
@@ -105,7 +126,7 @@ const Hero = () => {
                 </div>
 
                 {/* Social Media Platforms */}
-                <div className="hero-platforms animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                <div className="hero-platforms">
                     <span className="platforms-label">Podcast available on:</span>
                     <div className="platforms-carousel">
                         <div className="platforms-track">
@@ -114,6 +135,12 @@ const Hero = () => {
                                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                                 </svg>
                                 <span>YouTube</span>
+                            </a>
+                            <a href="https://youtube.com/@kulturalkompass/community?si=G9DK9A2T_QD9hflU" target="_blank" rel="noopener noreferrer" className="platform-link community" title="Join Community">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--brand-orange)">
+                                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 0 5 1.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                                </svg>
+                                <span>Community</span>
                             </a>
                             <a href="https://tiktok.com/@kulturalkompass?_r=1&_t=ZS-93jMrut6M9A" target="_blank" rel="noopener noreferrer" className="platform-link tiktok" title="TikTok">
                                 <svg width="28" height="28" viewBox="0 0 24 24" fill="#000000">
