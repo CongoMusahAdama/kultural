@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Single Page Application (SPA) redirect rule
+# This ensures that if you refresh on a sub-page, Netlify handles it correctly via React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

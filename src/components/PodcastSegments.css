@@ -1,0 +1,193 @@
+.segments {
+    background-color: var(--brand-black);
+    padding: var(--spacing-2xl) 0;
+    overflow: hidden;
+    /* For any decorative elements */
+}
+
+/* Container for the list of segments */
+.segments-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+    /* Large gap between segments */
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* Individual Segment Row */
+.segment-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    background: transparent;
+    /* Seamless blend */
+    border: none;
+    padding: 0;
+}
+
+/* Alternating Layout: Even items reversed */
+.segment-card:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+/* Image Side */
+.segment-image-wrapper {
+    flex: 1;
+    position: relative;
+    height: 400px;
+    /* Taller, more cinematic */
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    /* Deep shadow */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+}
+
+.segment-image-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(216, 68, 24, 0.2) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.segment-card:hover .segment-image-wrapper {
+    box-shadow: 0 25px 50px rgba(216, 68, 24, 0.3);
+    border-color: rgba(216, 68, 24, 0.5);
+}
+
+.segment-card:hover .segment-image-wrapper::after {
+    opacity: 1;
+}
+
+.segment-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.segment-card:hover .segment-img {
+    transform: scale(1.05);
+    /* Subtle smooth zoom */
+}
+
+/* Content Side */
+.segment-content {
+    flex: 1;
+    padding: var(--spacing-md);
+    text-align: left;
+}
+
+/* Typography */
+.segment-subtitle {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--brand-orange);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    padding-left: 50px;
+    /* Line decoration */
+}
+
+/* Decorative line before subtitle */
+.segment-subtitle::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 2px;
+    background-color: var(--brand-orange);
+}
+
+.segment-title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    /* Large and bold */
+    color: var(--brand-white);
+    line-height: 1.1;
+    margin-bottom: var(--spacing-md);
+}
+
+.segment-description {
+    font-size: 1.1rem;
+    color: var(--brand-text-gray);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+    max-width: 90%;
+}
+
+/* Topics Styling - Professional Tags */
+.segment-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.topic-tag {
+    font-family: var(--font-primary);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    /* Rounded pills */
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.topic-tag:hover {
+    border-color: var(--brand-orange);
+    color: var(--brand-orange);
+    background: rgba(216, 68, 24, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+
+    .segment-card,
+    .segment-card:nth-child(even) {
+        flex-direction: column;
+        /* Stack on smaller screens */
+        gap: var(--spacing-lg);
+        text-align: center;
+    }
+
+    .segment-image-wrapper {
+        width: 100%;
+        height: 300px;
+    }
+
+    .segment-content {
+        padding: 0;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .segment-subtitle {
+        padding-left: 0;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .segment-subtitle::before {
+        display: none;
+        /* Remove line on mobile for center alignment */
+    }
+
+    .segment-title {
+        font-size: 2.25rem;
+    }
+
+    .segment-topics {
+        justify-content: center;
+    }
+}
